@@ -9,16 +9,35 @@
             InitializeComponent();
         }
 
-        private void OnCounterClicked(object sender, EventArgs e)
+        private void Limpiar()
         {
-            count++;
+            Nombre.Text = "";
+            Apellidos.Text = "";
+            Edad.Text = "";
+            Correo.Text = "";
+            Direccion.Text = "";
+        }
 
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
+        private async void btnGuardar(object sender, EventArgs e)
+        {
+            var person = new Models.Personas
+            {
+                Nombre = Nombre.Text,
+                Apellidos = Apellidos.Text,
+                Edad = Convert.ToInt32(Edad.Text),
+                Correo = Correo.Text,
+                Direccion = Direccion.Text
+            };
+
+            if (await MauiProgram.Instancia.AddPeople(person) > 0)
+            {
+                await DisplayAlert("Alerta", "Se han guardado los registros correctamente!", "Ok");
+                Limpiar();
+            }
             else
-                CounterBtn.Text = $"Clicked {count} times";
-
-            SemanticScreenReader.Announce(CounterBtn.Text);
+            {
+                await DisplayAlert("ERROR", "Ha Ocurrido un Error", "OK");
+            }
         }
     }
 }
